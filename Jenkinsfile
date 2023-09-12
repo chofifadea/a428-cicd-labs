@@ -16,10 +16,17 @@ pipeline {
                 sh './jenkins/scripts/test.sh'
             }
         }
+        stage('Waiting for Approval'){
+            steps{
+                timeout(time: 1, unit: "MINUTES") {
+                input message: 'Are you ready for deploy?', submitter: 'dicoding'
+                }
+            }
+        }
         stage('Deploy') { 
             steps {
                 sh './jenkins/scripts/deliver.sh' 
-                input message: 'Sudah selesai menggunakan React App? (Klik "Proceed" untuk mengakhiri)' 
+                sleep 1
                 sh './jenkins/scripts/kill.sh' 
             }
         }
